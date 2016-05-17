@@ -368,4 +368,4 @@ Intermittent test failures are the bane of many a developers life.  It's importa
 ## Challenges
 
 
-Fork and clone the <a href="https://github.com/sf-wdi-27-28/rspec_testing_inventory" target="_blank">rspec testing app</a>. Follow the instructions there.
+Fork and clone the <a href="https://github.com/SF-WDI-LABS/rspec_testing_inventory" target="_blank">rspec testing app</a>. Follow the instructions there.
