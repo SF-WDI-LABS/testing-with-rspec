@@ -362,7 +362,7 @@ Intermittent test failures are the bane of many a developers life.  It's importa
 ## Other Tools
 
 * [FactoryGirl](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md)
-* [shoulda](http://matchers.shoulda.io/docs/v3.1.0/) - Make Rails model tests super easy.
+* [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) - Make Rails model tests super easy.
 * [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) - used to wipe the database before each test, not necessary on smaller apps as tests are rolled-back.
 
 ## Challenges
