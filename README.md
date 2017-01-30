@@ -1,12 +1,36 @@
-# <img src="https://cloud.githubusercontent.com/assets/7833470/10899314/63829980-8188-11e5-8cdd-4ded5bcb6e36.png" height="60"> Testing with RSpec
+
+<!--
+Creator: Team
+Last Edited by: Brianna
+Location: SF
+-->
+![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)
+
+# Testing Rails with RSpec
 
 
-| Objectives |
-| :---- |
-| Understand the difference between unit and integration tests. |
-| Identify various aspects of Rails apps that we might want to test.|
-| Test model methods using rspec-rails. |
-| Test controller actions using rspec-rails. |
+### Why is this important?
+<!-- framing the "why" in big-picture/real world examples -->
+*This workshop is important because:*
+
+Rails apps tend to be large and complex.  All the benefits of testing are even more apparent with these apps, and the community has created gems that make it easier to test Rails with the Rspec gem we've used before. 
+
+### What are the objectives?
+<!-- specific/measurable goal for students to achieve -->
+*After this workshop, developers will be able to:*
+ 
+- Identify various aspects of Rails apps that we might want to test.
+- Test model methods using rspec-rails. 
+- Test controller actions using rspec-rails. 
+
+
+### Where should we be now?
+<!-- call out the skills that are prerequisites -->
+*Before this workshop, developers should already be able to:*
+
+- Explain the difference between unit and integration tests.
+- Describe the roles of routes, controllers, views, and models in a Rails app. 
+
 
 ## Resources
 
@@ -365,7 +389,9 @@ Intermittent test failures are the bane of many a developers life.  It's importa
 * [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) - Make Rails model tests super easy.
 * [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) - used to wipe the database before each test, not necessary on smaller apps as tests are rolled-back.
 
-## Challenges
+<!-- ## Challenges
 
 
 Fork and clone the <a href="https://github.com/SF-WDI-LABS/rspec_testing_inventory" target="_blank">rspec testing app</a>. Follow the instructions there.
+
+-->
