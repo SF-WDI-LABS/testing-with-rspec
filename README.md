@@ -37,8 +37,8 @@ Rails apps tend to be large and complex.  All the benefits of testing are even m
 | Resource | Description |
 | :-------- | ----------- |
 | [RSpec matchers](https://www.relishapp.com/rspec/rspec-expectations/v/3-0/docs/built-in-matchers) | Reference for RSpec |
-| [shoulda](http://matchers.shoulda.io/docs/v3.1.0/) | Magic for model specs |
-| [FactoryGirl](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md) | Factories let you build up objects quickly for your specs |
+| [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) | Magic for model specs |
+| [FactoryGirl](https://github.com/thoughtbot/factory_girl) | Factories let you build up objects quickly for your specs |
 | [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) | Cleans out your database before each test. |
 
 
