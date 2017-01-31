@@ -219,8 +219,13 @@ end
 * behavior
 * by component
 
-We try to test each component or piece independently.  Code written following good object-oriented practices and with concerns well separated is far easier to test.  So, if we write our tests before our code our tests can help to push us to write good object-oriented code and to separate concerns.  
-Break tests into test files for each class.  And then groups of tests for each method in the class.  And then possibly into `context`s for specific conditions under which the method may be used.  (E.g. with valid or invalid data, with strings or integers, when x=true or x=false).  
+We try to test each component or piece independently.  Code written with object-oriented practices and with good separation of concerns  is far easier to test.  So, if we write our tests before our code our tests can help to push us to write good object-oriented code and to separate concerns.  
+
+Test organization:
+- a test file for each class
+- a group of tests for each method in the class
+- possibly `context`s for specific conditions under which the method may be used (with valid or invalid data, with strings or integers, when x=true or x=false)
+- a test for each behavior the method should do
 
 Isolate tests from each other.  One test should **never depend on another test** to change or prepare something.  Each test should be able to run on its own without the others.  
 
@@ -228,38 +233,8 @@ Test behavior.
 
 ### Testing Models
 
-##### FactoryGirl
 
-We can set up a `User` instance for testing purposes with `User.create` or we can use a tool called FactoryGirl to do this for us.
-
-  ```ruby
-  #
-  # spec/models/user_spec.rb
-  #
-  require 'rails_helper'
-  RSpec.describe User, type: :model do
-
-    subject(:user) { FactoryGirl.create(:user) }
-
-  end
-
-  #
-  # spec/factories/user.rb
-  #
-  FactoryGirl.define do
-    factory :user do
-      sequence(:email) { |n| "g#{n}@g.com" }
-      password "testtest"
-      first_name 'Jon'
-      last_name 'Snow'
-      confirmed_at { Time.now }
-    end
-  end
-  ```
-
-> It's also possible to use FFaker to generate some data either for `User.create` or for FactoryGirl.  But FFaker can run into intermittent issues because it can produce duplicate data or results you may not expect.  Therefore many developers prefer to use FactoryGirl's `sequence`.  
-
-Assuming we've already set `user` with first and last names, we can then test that the `full_name` method correctly calculates the full name:
+Below is a partial test file for a `User` model.  It assumes that by the `describe` line, we've set up a `user` instance with first and last names.  Then, it tests that the `full_name` method correctly calculates the full name:
 
   ```ruby
   #
@@ -279,10 +254,53 @@ Assuming we've already set `user` with first and last names, we can then test th
   end
   ```
 
-<!-- exclude if model validations not studied -->
-#### shoulda
+##### Check for Understanding
 
-Previously we talked about model validations.  You'll probably want to test these.  The `shoulda` gem provides an easier way to write specs for common model validations.
+Go through this code line-by-line with a partner. Alternate which partner explians each line. 
+
+##### FactoryGirl
+
+We can set up a `User` instance for testing purposes with `User.create`, or we can use a tool called FactoryGirl to do this for us.
+
+  ```ruby
+  #
+  # spec/models/user_spec.rb
+  #
+  require 'rails_helper'
+  RSpec.describe User, type: :model do
+  
+    # without Factory Girl
+    subject(:user) { User.create(first_name: 'Juan', last_name: 'Grey') }
+    OR 
+    # FactoryGirl version (requries factory, next snippet)
+    subject(:user) { FactoryGirl.create(:user) }  
+    
+   ...
+
+  end
+```
+```ruby
+  #
+  # spec/factories/user.rb
+  #
+  FactoryGirl.define do
+    factory :user do
+      sequence(:email) { |n| "g#{n}@g.com" }
+      password "testtest"
+      first_name 'Jon'
+      last_name 'Snow'
+      confirmed_at { Time.now }
+    end
+  end
+  ```
+
+> It's also possible to use FFaker to generate some data either for `User.create` or for FactoryGirl.  But FFaker can run into intermittent issues because it can produce duplicate data or results you may not expect.  Therefore many developers prefer to use FactoryGirl's `sequence`.  
+
+
+<!-- exclude if model validations not studied -->
+#### shoulda matchers
+
+Previously we talked about model validations.  You'll probably want to test these.  The `shoulda matchers` gem provides an easier way to write specs for common model validations.
 
 Validating that a Post is invalid without a title:
 
@@ -295,18 +313,18 @@ Validating that a Post is invalid without a title:
 
 ```
 
-The same test as above written using shoulda:
+The same test as above written using shoulda matchers:
 
 ```ruby
 it { should validate_presence_of(:title) }
 ```
 
 * shoulda also provides test helpers for controllers
-* See the [shoulda docs](http://matchers.shoulda.io/docs/v3.1.0/)
+* See the [shoulda matchers docs](http://matchers.shoulda.io/docs/v3.1.0/)
 
 ### Testing Controllers
 
-To test authentication, we need to define a `current_user` before each of our tests run. The last line in this `before do` block --   `allow_any_instance_of(...` -- creates a "stub" (fake) `current_user` instance method for the ApplicationController and sets it up as a getter that only ever returns the `@current_user` we made with ffaker.
+To test authentication, we need to define a `current_user` before each of our tests run. 
 
   ```ruby
   #
@@ -372,7 +390,20 @@ To test authentication, we need to define a `current_user` before each of our te
     end
   end
   ```
+ 
+##### Check for Understanding
 
+1. What does `allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(signed_in_user)` mean (the last line of the `before` block)?
+
+<!--	<details><summary>click for information</summary>
+
+	The last line in this `before do` block --   `allow_any_instance_of(...` -- creates a "stub" (fake) `current_user` instance method for the ApplicationController and sets it up as a getter that only ever returns the `@current_user` we made with ffaker.
+	</details>
+	
+	-->
+	
+	
+	
 ### Testing Views
 
 We could use a tool like <a href="https://github.com/jnicklas/capybara" target="_blank">Capybara</a> to test client-side views and interactions (e.g. does clicking on "Logout" do what we expect?). We won't cover view testing today, though!
