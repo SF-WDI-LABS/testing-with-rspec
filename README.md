@@ -37,9 +37,9 @@ Rails apps tend to be large and complex.  All the benefits of testing are even m
 | Resource | Description |
 | :-------- | ----------- |
 | [RSpec matchers](https://www.relishapp.com/rspec/rspec-expectations/v/3-0/docs/built-in-matchers) | Reference for RSpec |
-| [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) | Magic for model specs |
+| [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) | Dev-friendly methods for model specs |
 | [FactoryGirl](https://github.com/thoughtbot/factory_girl) | Factories let you build up objects quickly for your specs |
-| [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) | Cleans out your database before each test. |
+| [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) | Cleans out your database before each test |
 
 
 
@@ -47,7 +47,7 @@ Rails apps tend to be large and complex.  All the benefits of testing are even m
 
 Tests can be broadly split into two categories.  **Unit Tests** and **Integration Tests**.  Both are important.
 
-In **Unit Tests** which we'll talk about today we try to isolate each component (or class/method) and test it on it's own.  We separate our Controllers from our Views and test the boundary of its interface.  
+In **Unit Tests**, which we'll talk about today, we try to isolate each component (or class/method) and test it on its own.  We separate our Controllers from our Views and test the boundary of its interface.  
 Unit tests tend to run faster because we're testing small components.  By having to isolate components from each other to test them we're forced to write better OO code.  The functionality can't blur across several modules without us having to do a lot of work in the test to stub that out.
 
 In **Integration Tests** we combine components together, sometimes just a few and other times the entire system.  In Rails, integration tests often drive a browser and test the entirety of the system--the full request response cycle.  These tests tend to take much longer to run.  They test the collusion of components and that the interface between them is behaving as we expect.
@@ -234,7 +234,7 @@ Test behavior.
 ### Testing Models
 
 
-Below is a partial test file for a `User` model.  It assumes that by the `describe` line, we've set up a `user` instance with first and last names.  Then, it tests that the `full_name` method correctly calculates the full name:
+Below is a partial test file for a `User` model.  It assumes that before the `describe` line, we've set up a `user` instance with first and last names.  Then, it tests that the `full_name` method correctly calculates the full name:
 
   ```ruby
   #
@@ -300,7 +300,7 @@ We can set up a `User` instance for testing purposes with `User.create`, or we c
 <!-- exclude if model validations not studied -->
 #### shoulda matchers
 
-Previously we talked about model validations.  You'll probably want to test these.  The `shoulda matchers` gem provides an easier way to write specs for common model validations.
+Previously we talked about model validations.  You can test these.  The `shoulda matchers` gem provides an easy way to write specs for common model validations.
 
 Validating that a Post is invalid without a title:
 
