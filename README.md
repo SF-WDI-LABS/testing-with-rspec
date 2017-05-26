@@ -61,9 +61,9 @@ Many companies require that all the code they develop comes with tests.  Often b
 
 ## rspec-rails
 
-RSpec is a testing gem for Ruby. It helps us write tests that sound like user stories or planning comments ("This method does..."). <a href"https://github.com/rspec/rspec-rails" target="_blank">rspec-rails</a> is a testing framework specifically for Rails. We'll use rspec-rails to test our models and controllers.
+RSpec is a testing gem for Ruby. It helps us write tests that sound like user stories or planning comments ("describe add; it ... "). [rspec-rails](https://github.com/rspec/rspec-rails) is a testing framework specifically for Rails. We'll use rspec-rails to test our models and controllers.
 
-rspec-rails helps us implement the four-phase testing methodology (with setup, exercise, verify, and tear down steps). Here's what a simple rspec-rails test might look like:
+rspec-rails helps us implement a four-phase testing methodology (with setup, exercise, verify, and tear down steps). Here's what a simple rspec-rails test might look like:
 
 ```ruby
 #
