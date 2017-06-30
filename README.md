@@ -104,6 +104,8 @@ RSpec.describe Pet, type: :model do
 end
 ```
 
+> Most of the methods we'll use, including setup methods like `let`, `let!`, `before`, and `subject` come from rspec; they're not limited to rspec-rails.  
+
 ### Adding rspec-rails to Your Project
 
 1. Add rspec-rails to your Gemfile in the `development` and `test` groups:
