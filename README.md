@@ -1,6 +1,6 @@
 
 <!--
-Creator: Team
+Creator: Team 
 Last Edited by: Brianna
 Location: SF
 -->
@@ -55,13 +55,31 @@ In **Integration Tests** we combine components together, sometimes just a few an
 **Both types of tests are important.**  There are also other types but they can generally be broken down into finer grained versions of the above.  Together the Unit and Integration tests you write become part of your test suite.
 
 
-## How are tests used in industry?
+> **How are tests used in industry?**
+>
+> Many companies require that all the code they develop comes with tests.  Often before code can be depoloyed, or merged into master, the entire test suite is run and all tests must pass.  
 
-Many companies require that all the code they develop comes with tests.  Often before merging code into master, the entire test suite is run and all tests must pass.  
+## rspec
+
+RSpec is a testing gem for Ruby. It helps us write tests that sound like user stories or planning comments ("describe add; it ... "). 
+
+#### Anatomy of a test
+
+A test should consist of:
+
+1. **Setup**: Using `let` or `before` or `subject` to preconfigure data that is needed to test or set the test subject.  You can keep your code dry by re-using these across multiple tests.
+
+	* Including **Definition**: A name for the test.  This should use an active verb.  Ex. "is invalid without an email".  This should also be descriptive enough that it can be used as **documentation** by other developers.  _This isn't strictly one of the 4 parts of a test, but it IS really important_, future developers will like you if your test name tells them what the code should do.
+
+1. **Exercise**: Any code inside the test-block itself that makes a change to the object under test prior to validating that it behaves properly.
+
+1. **Validation**: Finally validating that the _Object Under Test_ has behaved in the expected way.  In RSpec this usually involves using `expect`.  Sometimes this is called the **assertion**.
+
+1. **Tear-down**: Cleaning up after the test.  Usually this is handled for you by RSpec and may include using DatabaseCleaner to wipe the testing database.
 
 ## rspec-rails
 
-RSpec is a testing gem for Ruby. It helps us write tests that sound like user stories or planning comments ("describe add; it ... "). [rspec-rails](https://github.com/rspec/rspec-rails) is a testing framework specifically for Rails. We'll use rspec-rails to test our models and controllers.
+[rspec-rails](https://github.com/rspec/rspec-rails) is a testing framework built on rspec, specifically for Rails. We'll use rspec-rails to test our models and controllers.
 
 rspec-rails helps us implement a four-phase testing methodology (with setup, exercise, verify, and tear down steps). Here's what a simple rspec-rails test might look like:
 
@@ -99,9 +117,9 @@ end
    end
   ```
 
-1. Run `bundle install` (or `bundle` for short) in your terminal so that rspec-rails is actually added to your project.
+2. Run `bundle install` (or `bundle` for short) in your terminal so that rspec-rails is actually added to your project.
 
-1. Add tests to your rails project using the terminal:
+3. Add tests to your rails project using the terminal:
 
   ```bash
   $ rails g rspec:install
@@ -109,9 +127,9 @@ end
 
   This creates a `spec` directory. It also adds `spec/spec_helper.rb` and `.rspec` files that are used for configuration. See those files for more information.
 
-1. Configure your specs by going into the `.rspec` file and removing the line that says `--warnings` if there is one.  Consider adding `--format documentation`
+4. Configure your specs by going into the `.rspec` file and removing the line that says `--warnings` if there is one.  Consider adding `--format documentation`
 
-1. If you created models before adding rspec-rails, create a spec file for each of your models. (This is only necessary if you had a model created before you installed rspec-rails.)
+5. If you created models before adding rspec-rails, create a spec file for each of your models. (This is only necessary if you had a model created before you installed rspec-rails.)
 
   ```bash
   $ rails g rspec:model MODEL_NAME
@@ -119,12 +137,11 @@ end
 
 ### Running RSpec-rails Tests
 
-Typical spec folders and files for a Rails project include:
+Typical spec folders and files for a Rails project include these and others:
 
 * `spec/models/user_spec.rb`
 * `spec/controllers/users_controller_spec.rb`
-* `spec/views/user/show.html.erb_spec.rb`
-* `spec/features/signup_spec.rb`
+
 
 > As you can see spec files should always be named ending in `_spec.rb`.
 
@@ -140,26 +157,14 @@ To run only a specific set of tests, type `rspec` and the file path for the test
   rspec spec/controllers/articles_controller_spec.rb
 
   # To search for and run a single spec inside a file:
-  rspec spec/controllers/articles_controller_spec.rb -e 'is cute'
+  rspec spec/controllers/articles_controller_spec.rb -e 'featured'
   ```
 
   Run `rspec` from the terminal now to check that your install worked.
 
 ## Writing rspec-rails Tests
 
-### Anatomy of a test
-
-A test should consist of:
-
-1. **Setup**: Using `let` or `before` or `subject` to preconfigure data that is needed to test or set the test subject.  You can keep your code dry by re-using these across multiple tests.
-
-	* Including **Definition**: A name for the test.  This should use an active verb.  Ex. "is invalid without an email".  This should also be descriptive enough that it can be used as **documentation** by other developers.  _This isn't strictly one of the 4 parts of a test, but it IS really important_, future developers will like you if your test name tells them what the code should do.
-
-1. **Exercise**: Any code inside the test-block itself that makes a change to the object under test prior to validating that it behaves properly.
-
-1. **Validation**: Finally validating that the _Object Under Test_ has behaved in the expected way.  In RSpec this usually involves using `expect`.  Sometimes this is called the **assertion**.
-
-1. **Tear-down**: Cleaning up after the test.  Usually this is handled for you by RSpec and may include using DatabaseCleaner to wipe the testing database.
+rspec-rails gives us structures for every phase of a test: setup, definition & exercise, validate, and teardown steps.
 
 #### Setup
 
@@ -213,28 +218,29 @@ after do
 end
 ```
 
-### What do we test?
+### Other Best Practices 
 
-* isolation
-* behavior
-* by component
-
-We try to test each component or piece independently.  Code written with object-oriented practices and with good separation of concerns  is far easier to test.  So, if we write our tests before our code our tests can help to push us to write good object-oriented code and to separate concerns.  
+We try to test each component or piece independently.  
 
 Test organization:
-- a test file for each class
-- a group of tests for each method in the class
-- possibly `context`s for specific conditions under which the method may be used (with valid or invalid data, with strings or integers, when x=true or x=false)
-- a test for each behavior the method should do
+- create a test file for each class
+- add a group of tests for each method that needs to be tested in the class
+- if methods should behave very differently in different scenarios, use `context` to group tests for each scenario (logged in vs logged out, valid data vs invalid, etc)
+- write a test for each behavior the method should do
 
 Isolate tests from each other.  One test should **never depend on another test** to change or prepare something.  Each test should be able to run on its own without the others.  
 
-Test behavior.  
 
-### Testing Models
+### Testing Rails Models
+
+When thinking about models, there are a few things you might want to test. In Rails, the most common testing targets are:
+- built-in validations
+- custom validations
+- custom model methods 
+- associations
 
 
-Below is a partial test file for a `User` model.  It assumes that before the `describe` line, we've set up a `user` instance with first and last names.  Then, it tests that the `full_name` method correctly calculates the full name:
+Below is a partial test file for a `User` model.  It sets up a `user` instance with first and last names (see "setup" section above).  Then, it tests that a `full_name` custom model method correctly calculates the full name:
 
   ```ruby
   #
@@ -245,9 +251,12 @@ Below is a partial test file for a `User` model.  It assumes that before the `de
 
     ...
 
+    
     describe "#full_name" do
+      subject(:user) { User.create(first_name: 'Juan', last_name: 'Grey') }
+      
       it "joins first name and last name" do
-        expect(user.full_name).to eq("#{user.first_name} #{user.last_name}")
+        expect(user.full_name).to eq("Juan Grey")
       end
     end
 
@@ -257,6 +266,15 @@ Below is a partial test file for a `User` model.  It assumes that before the `de
 ##### Check for Understanding
 
 Go through this code line-by-line with a partner. Alternate which partner explians each line. 
+
+<details><summary>What steps will developers need to do to make this test pass?</summary>
+
+1. Make sure there is a `User` model.
+2. Define a `full_name` instance method in the user model class.
+3. Make sure instances of `user` have a `first_name` and a `last_name` so the setup works as expected. 
+4. Fill in the `full_name` method so that it returns the correct string.  
+
+</details>
 
 ##### FactoryGirl
 
@@ -269,6 +287,7 @@ We can set up a `User` instance for testing purposes with `User.create`, or we c
   require 'rails_helper'
   RSpec.describe User, type: :model do
   
+    ...
     # without Factory Girl
     subject(:user) { User.create(first_name: 'Juan', last_name: 'Grey') }
     OR 
@@ -294,7 +313,7 @@ We can set up a `User` instance for testing purposes with `User.create`, or we c
   end
   ```
 
-> It's also possible to use FFaker to generate some data either for `User.create` or for FactoryGirl.  But FFaker can run into intermittent issues because it can produce duplicate data or results you may not expect.  Therefore many developers prefer to use FactoryGirl's `sequence`.  
+> It's also possible to use FFaker to generate some data either for `User.create` or for FactoryGirl.  But FFaker is random. It can make it hard to predict what data you should see, and you might run into intermittent issues because of duplicate data or unexpected random results.  Therefore many developers prefer to hard-code test data or use something like FactoryGirl's `sequence`.  
 
 
 <!-- exclude if model validations not studied -->
@@ -317,10 +336,12 @@ The same test as above written using shoulda matchers:
 
 ```ruby
 it { should validate_presence_of(:title) }
+# another syntax:
+it { is_expected.to validate_presence_of(:title) }
 ```
 
-* shoulda also provides test helpers for controllers
-* See the [shoulda matchers docs](http://matchers.shoulda.io/docs/v3.1.0/)
+* shoulda-matchers also provides test helpers for controllers
+* See the [shoulda-matchers docs](http://matchers.shoulda.io/docs/v3.1.0/)
 
 ### Testing Controllers
 
@@ -395,18 +416,19 @@ To test authentication, we need to define a `current_user` before each of our te
 
 1. What does `allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(signed_in_user)` mean (the last line of the `before` block)?
 
-<!--	<details><summary>click for information</summary>
+<details><summary>click for information</summary>
 
-	The last line in this `before do` block --   `allow_any_instance_of(...` -- creates a "stub" (fake) `current_user` instance method for the ApplicationController and sets it up as a getter that only ever returns the `@current_user` we made with ffaker.
-	</details>
+The last line in this <code>before do</code> block --   <code>allow_any_instance_of(...</code> -- creates a "stub" (fake) <code>current_user</code> instance method for the ApplicationController and sets it up as a getter that only ever returns the <code>signed_in_user</code> variable we made with FactoryGirl.
+
+</details>
 	
-	-->
+
 	
 	
 	
 ### Testing Views
 
-We could use a tool like <a href="https://github.com/jnicklas/capybara" target="_blank">Capybara</a> to test client-side views and interactions (e.g. does clicking on "Logout" do what we expect?). We won't cover view testing today, though!
+We could use a tool like <a href="https://github.com/jnicklas/capybara">Capybara</a> to test client-side views and interactions (e.g. does clicking on "Logout" do what we expect?). We won't cover view testing today, though!
 
 ## Maintaining tests
 
@@ -414,9 +436,10 @@ It's extremely important to maintain tests (especially on the master branch) and
 
 Intermittent test failures are the bane of many a developers life.  It's important to track these down too...they're usually caused by a poorly written test.
 
-## Other Tools
 
-* [FactoryGirl](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md)
-* [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) - Make Rails model tests super easy.
-* [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) - used to wipe the database before each test, not necessary on smaller apps as tests are rolled-back.
+## Resources
+* [http://www.betterspecs.org](http://www.betterspecs.org) - rspec-rails community testing guidelines
+* [FactoryGirl](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md) - create instances for testing with handy features like sequences
+* [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) - make Rails model tests super easy
+* [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) - used to wipe the database before each test, not necessary on smaller apps as tests are rolled back
 
