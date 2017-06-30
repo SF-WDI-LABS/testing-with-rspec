@@ -77,6 +77,20 @@ A test should consist of:
 
 1. **Tear-down**: Cleaning up after the test.  Usually this is handled for you by RSpec and may include using DatabaseCleaner to wipe the testing database.
 
+
+#### Testing Best Practices 
+
+We try to test each component or piece independently.  
+
+Test organization:
+- create a test file for each class
+- add a group of tests for each method that needs to be tested in the class
+- if methods should behave very differently in different scenarios, use `context` to group tests for each scenario (logged in vs logged out, valid data vs invalid, etc)
+- write a test for each behavior the method should do
+
+Isolate tests from each other.  One test should **never depend on another test** to change or prepare something.  Each test should be able to run on its own without the others.  
+
+
 ## rspec-rails
 
 [rspec-rails](https://github.com/rspec/rspec-rails) is a testing framework built on rspec, specifically for Rails. We'll use rspec-rails to test our models and controllers.
@@ -219,19 +233,6 @@ after do
   cat.pet
 end
 ```
-
-### Other Best Practices 
-
-We try to test each component or piece independently.  
-
-Test organization:
-- create a test file for each class
-- add a group of tests for each method that needs to be tested in the class
-- if methods should behave very differently in different scenarios, use `context` to group tests for each scenario (logged in vs logged out, valid data vs invalid, etc)
-- write a test for each behavior the method should do
-
-Isolate tests from each other.  One test should **never depend on another test** to change or prepare something.  Each test should be able to run on its own without the others.  
-
 
 ### Testing Rails Models
 
