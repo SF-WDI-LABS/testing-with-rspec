@@ -1,21 +1,45 @@
-# <img src="https://cloud.githubusercontent.com/assets/7833470/10899314/63829980-8188-11e5-8cdd-4ded5bcb6e36.png" height="60"> Testing with RSpec
+
+<!--
+Creator: Team
+Last Edited by: Brianna
+Location: SF
+-->
+![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)
+
+# Testing Rails with RSpec
 
 
-| Objectives |
-| :---- |
-| Understand the difference between unit and integration tests. |
-| Identify various aspects of Rails apps that we might want to test.|
-| Test model methods using rspec-rails. |
-| Test controller actions using rspec-rails. |
+### Why is this important?
+<!-- framing the "why" in big-picture/real world examples -->
+*This workshop is important because:*
+
+Rails apps tend to be large and complex.  All the benefits of testing are even more apparent with these apps, and the community has created gems that make it easier to test Rails with the Rspec gem we've used before. 
+
+### What are the objectives?
+<!-- specific/measurable goal for students to achieve -->
+*After this workshop, developers will be able to:*
+ 
+- Identify various aspects of Rails apps that we might want to test.
+- Test model methods using rspec-rails. 
+- Test controller actions using rspec-rails. 
+
+
+### Where should we be now?
+<!-- call out the skills that are prerequisites -->
+*Before this workshop, developers should already be able to:*
+
+- Explain the difference between unit and integration tests.
+- Describe the roles of routes, controllers, views, and models in a Rails app. 
+
 
 ## Resources
 
 | Resource | Description |
 | :-------- | ----------- |
 | [RSpec matchers](https://www.relishapp.com/rspec/rspec-expectations/v/3-0/docs/built-in-matchers) | Reference for RSpec |
-| [shoulda](http://matchers.shoulda.io/docs/v3.1.0/) | Magic for model specs |
-| [FactoryGirl](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md) | Factories let you build up objects quickly for your specs |
-| [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) | Cleans out your database before each test. |
+| [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) | Dev-friendly methods for model specs |
+| [FactoryGirl](https://github.com/thoughtbot/factory_girl) | Factories let you build up objects quickly for your specs |
+| [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) | Cleans out your database before each test |
 
 
 
@@ -23,7 +47,7 @@
 
 Tests can be broadly split into two categories.  **Unit Tests** and **Integration Tests**.  Both are important.
 
-In **Unit Tests** which we'll talk about today we try to isolate each component (or class/method) and test it on it's own.  We separate our Controllers from our Views and test the boundary of its interface.  
+In **Unit Tests**, which we'll talk about today, we try to isolate each component (or class/method) and test it on its own.  We separate our Controllers from our Views and test the boundary of its interface.  
 Unit tests tend to run faster because we're testing small components.  By having to isolate components from each other to test them we're forced to write better OO code.  The functionality can't blur across several modules without us having to do a lot of work in the test to stub that out.
 
 In **Integration Tests** we combine components together, sometimes just a few and other times the entire system.  In Rails, integration tests often drive a browser and test the entirety of the system--the full request response cycle.  These tests tend to take much longer to run.  They test the collusion of components and that the interface between them is behaving as we expect.
@@ -37,9 +61,9 @@ Many companies require that all the code they develop comes with tests.  Often b
 
 ## rspec-rails
 
-RSpec is a testing gem for Ruby. It helps us write tests that sound like user stories or planning comments ("This method does..."). <a href"https://github.com/rspec/rspec-rails" target="_blank">rspec-rails</a> is a testing framework specifically for Rails. We'll use rspec-rails to test our models and controllers.
+RSpec is a testing gem for Ruby. It helps us write tests that sound like user stories or planning comments ("describe add; it ... "). [rspec-rails](https://github.com/rspec/rspec-rails) is a testing framework specifically for Rails. We'll use rspec-rails to test our models and controllers.
 
-rspec-rails helps us implement the four-phase testing methodology (with setup, exercise, verify, and tear down steps). Here's what a simple rspec-rails test might look like:
+rspec-rails helps us implement a four-phase testing methodology (with setup, exercise, verify, and tear down steps). Here's what a simple rspec-rails test might look like:
 
 ```ruby
 #
@@ -195,8 +219,13 @@ end
 * behavior
 * by component
 
-We try to test each component or piece independently.  Code written following good object-oriented practices and with concerns well separated is far easier to test.  So, if we write our tests before our code our tests can help to push us to write good object-oriented code and to separate concerns.  
-Break tests into test files for each class.  And then groups of tests for each method in the class.  And then possibly into `context`s for specific conditions under which the method may be used.  (E.g. with valid or invalid data, with strings or integers, when x=true or x=false).  
+We try to test each component or piece independently.  Code written with object-oriented practices and with good separation of concerns  is far easier to test.  So, if we write our tests before our code our tests can help to push us to write good object-oriented code and to separate concerns.  
+
+Test organization:
+- a test file for each class
+- a group of tests for each method in the class
+- possibly `context`s for specific conditions under which the method may be used (with valid or invalid data, with strings or integers, when x=true or x=false)
+- a test for each behavior the method should do
 
 Isolate tests from each other.  One test should **never depend on another test** to change or prepare something.  Each test should be able to run on its own without the others.  
 
@@ -204,38 +233,8 @@ Test behavior.
 
 ### Testing Models
 
-##### FactoryGirl
 
-We can set up a `User` instance for testing purposes with `User.create` or we can use a tool called FactoryGirl to do this for us.
-
-  ```ruby
-  #
-  # spec/models/user_spec.rb
-  #
-  require 'rails_helper'
-  RSpec.describe User, type: :model do
-
-    subject(:user) { FactoryGirl.create(:user) }
-
-  end
-
-  #
-  # spec/factories/user.rb
-  #
-  FactoryGirl.define do
-    factory :user do
-      sequence(:email) { |n| "g#{n}@g.com" }
-      password "testtest"
-      first_name 'Jon'
-      last_name 'Snow'
-      confirmed_at { Time.now }
-    end
-  end
-  ```
-
-> It's also possible to use FFaker to generate some data either for `User.create` or for FactoryGirl.  But FFaker can run into intermittent issues because it can produce duplicate data or results you may not expect.  Therefore many developers prefer to use FactoryGirl's `sequence`.  
-
-Assuming we've already set `user` with first and last names, we can then test that the `full_name` method correctly calculates the full name:
+Below is a partial test file for a `User` model.  It assumes that before the `describe` line, we've set up a `user` instance with first and last names.  Then, it tests that the `full_name` method correctly calculates the full name:
 
   ```ruby
   #
@@ -255,10 +254,53 @@ Assuming we've already set `user` with first and last names, we can then test th
   end
   ```
 
-<!-- exclude if model validations not studied -->
-#### shoulda
+##### Check for Understanding
 
-Previously we talked about model validations.  You'll probably want to test these.  The `shoulda` gem provides an easier way to write specs for common model validations.
+Go through this code line-by-line with a partner. Alternate which partner explians each line. 
+
+##### FactoryGirl
+
+We can set up a `User` instance for testing purposes with `User.create`, or we can use a tool called FactoryGirl to do this for us.
+
+  ```ruby
+  #
+  # spec/models/user_spec.rb
+  #
+  require 'rails_helper'
+  RSpec.describe User, type: :model do
+  
+    # without Factory Girl
+    subject(:user) { User.create(first_name: 'Juan', last_name: 'Grey') }
+    OR 
+    # FactoryGirl version (requries factory, next snippet)
+    subject(:user) { FactoryGirl.create(:user) }  
+    
+   ...
+
+  end
+```
+```ruby
+  #
+  # spec/factories/user.rb
+  #
+  FactoryGirl.define do
+    factory :user do
+      sequence(:email) { |n| "g#{n}@g.com" }
+      password "testtest"
+      first_name 'Jon'
+      last_name 'Snow'
+      confirmed_at { Time.now }
+    end
+  end
+  ```
+
+> It's also possible to use FFaker to generate some data either for `User.create` or for FactoryGirl.  But FFaker can run into intermittent issues because it can produce duplicate data or results you may not expect.  Therefore many developers prefer to use FactoryGirl's `sequence`.  
+
+
+<!-- exclude if model validations not studied -->
+#### shoulda matchers
+
+Previously we talked about model validations.  You can test these.  The `shoulda matchers` gem provides an easy way to write specs for common model validations.
 
 Validating that a Post is invalid without a title:
 
@@ -271,18 +313,18 @@ Validating that a Post is invalid without a title:
 
 ```
 
-The same test as above written using shoulda:
+The same test as above written using shoulda matchers:
 
 ```ruby
 it { should validate_presence_of(:title) }
 ```
 
 * shoulda also provides test helpers for controllers
-* See the [shoulda docs](http://matchers.shoulda.io/docs/v3.1.0/)
+* See the [shoulda matchers docs](http://matchers.shoulda.io/docs/v3.1.0/)
 
 ### Testing Controllers
 
-To test authentication, we need to define a `current_user` before each of our tests run. The last line in this `before do` block --   `allow_any_instance_of(...` -- creates a "stub" (fake) `current_user` instance method for the ApplicationController and sets it up as a getter that only ever returns the `@current_user` we made with ffaker.
+To test authentication, we need to define a `current_user` before each of our tests run. 
 
   ```ruby
   #
@@ -348,7 +390,20 @@ To test authentication, we need to define a `current_user` before each of our te
     end
   end
   ```
+ 
+##### Check for Understanding
 
+1. What does `allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(signed_in_user)` mean (the last line of the `before` block)?
+
+<!--	<details><summary>click for information</summary>
+
+	The last line in this `before do` block --   `allow_any_instance_of(...` -- creates a "stub" (fake) `current_user` instance method for the ApplicationController and sets it up as a getter that only ever returns the `@current_user` we made with ffaker.
+	</details>
+	
+	-->
+	
+	
+	
 ### Testing Views
 
 We could use a tool like <a href="https://github.com/jnicklas/capybara" target="_blank">Capybara</a> to test client-side views and interactions (e.g. does clicking on "Logout" do what we expect?). We won't cover view testing today, though!
@@ -365,7 +420,3 @@ Intermittent test failures are the bane of many a developers life.  It's importa
 * [shoulda matchers](http://matchers.shoulda.io/docs/v3.1.0/) - Make Rails model tests super easy.
 * [DatabaseCleaner](https://github.com/DatabaseCleaner/database_cleaner) - used to wipe the database before each test, not necessary on smaller apps as tests are rolled-back.
 
-## Challenges
-
-
-Fork and clone the <a href="https://github.com/SF-WDI-LABS/rspec_testing_inventory" target="_blank">rspec testing app</a>. Follow the instructions there.
